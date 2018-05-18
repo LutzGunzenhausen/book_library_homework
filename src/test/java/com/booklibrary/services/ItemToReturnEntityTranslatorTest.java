@@ -1,18 +1,16 @@
 package com.booklibrary.services;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import com.booklibrary.entities.Item;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import static org.assertj.core.api.Assertions.*;
 
 public class ItemToReturnEntityTranslatorTest {
 	
@@ -26,8 +24,6 @@ public class ItemToReturnEntityTranslatorTest {
 	
 	@Test
 	public void testTranslation() {
-		System.out.println(new Date(1314568800000L));
-		
 		ItemToReturnEntityTranslator translator = new ItemToReturnEntityTranslator(item);
 		ReturnEntity returnEntity = translator.translate();
 		assertEquals("9780080568782", returnEntity.getIsbn());
@@ -51,5 +47,4 @@ public class ItemToReturnEntityTranslatorTest {
 		
 		assertEquals("en", returnEntity.getLanguage());
 	}
-
 }

@@ -12,6 +12,7 @@ import com.booklibrary.entities.VolumeInfo;
 public class ItemToReturnEntityTranslator {
 	
 	private static final String DATE_FORMAT = "yyyy-MM-dd";
+	private static final String YEAR_FORMAT = "yyyy";
 	
 	private Item item;
 	private VolumeInfo volumeInfo;
@@ -47,8 +48,7 @@ public class ItemToReturnEntityTranslator {
 				return industryIdentifier.getIdentifier();
 			}
 		}
-		
-		throw new IllegalStateException();
+		return item.getId();
 	}
 	
 	private String getTitle() {
@@ -66,13 +66,19 @@ public class ItemToReturnEntityTranslator {
 	private Long getPublishedDate() {
 		String publishedDate = getVolumeInfo().getPublishedDate();
 		
+		Long date = parseDate(publishedDate, DATE_FORMAT);
+		if (date == null) {
+			date = parseDate(publishedDate, YEAR_FORMAT);
+		}
+		return date;
+	}
+
+	private Long parseDate(String publishedDate, String dateFormat) {
 		Date date;
 		try {
-			date = new SimpleDateFormat(DATE_FORMAT).parse(publishedDate);
+			date = new SimpleDateFormat(dateFormat).parse(publishedDate);
 			return date.getTime();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (ParseException ex) {
 			return null;
 		}
 	}

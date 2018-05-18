@@ -5,19 +5,45 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * user guide available at https://docs.gradle.org/4.6/userguide/tutorial_java_projects.html
  */
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 
-plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
-
-    // Apply the application plugin to add support for building an application
-    id 'application'
+    dependencies {
+        classpath 'com.bmuschko:gradle-tomcat-plugin:2.4.2'
+    }
 }
 
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'com.bmuschko.tomcat'
+
+// Apply the application plugin to add support for building an application
+apply plugin: 'application'
+
 // Define the main class for the application
-mainClassName = 'App'
+// mainClassName = 'App'
+// War file name
+war.baseName = 'BookLibraryHomework'
+// Web directory, this overrides the default value "webapp"
+project.webAppDirName = 'src/main/webapp'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    // Use jcenter for resolving your dependencies.
+    // You can declare any Maven/Ivy/file repository here.
+    mavenCentral()
+}
 
 dependencies {
+
+	// https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+	compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+
+	// https://mvnrepository.com/artifact/javax.servlet/servlet-api
+	compile group: 'javax.servlet', name: 'servlet-api', version: '2.3'
     // This dependency is found on compile classpath of this component and consumers.
     compile 'com.google.guava:guava:23.0'
     
@@ -27,6 +53,18 @@ dependencies {
 	//compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.5'
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
 	//compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
+	
+	// https://mvnrepository.com/artifact/org.springframework/spring-context
+	compile group: 'org.springframework', name: 'spring-context', version: '5.0.2.RELEASE'
+	
+	// https://mvnrepository.com/artifact/org.springframework/spring-webmvc
+	compile group: 'org.springframework', name: 'spring-webmvc', version: '5.0.2.RELEASE'
+	
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
+
+	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.3'
 	
 	compile 'javax.ws.rs:javax.ws.rs-api:2.0'
 	def jerseyVersion = '2.27'
@@ -43,16 +81,24 @@ dependencies {
 	
     
 
+	testCompile 'com.restfuse:com.eclipsesource.restfuse:1.2.0'
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/org.assertj/assertj-core
 	testCompile group: 'org.assertj', name: 'assertj-core', version: '3.9.1'
+	
+	def tomcatVersion = '8.5.24'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:8.5.2"
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+    }
     
 }
 
-// In this section you declare where to find the dependencies of your project
-repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+// context where tomcat is deployed, by defautl localhost:8080/
+//tomcatRun.contextPath = '/'
+//tomcatRunWar.contextPath = '/'
+
+task('StartApplication', dependsOn: ['war', 'tomcatRun']) {
 }

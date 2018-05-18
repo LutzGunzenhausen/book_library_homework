@@ -3,10 +3,13 @@ package com.booklibrary.repository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.booklibrary.entities.Books;
 import com.booklibrary.entities.IndustryIdentifier;
@@ -15,17 +18,30 @@ import com.booklibrary.entities.VolumeInfo;
 import com.booklibrary.services.AuthorRating;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Simple implementation of the {@link BookRepository}, that does not rely on any kind of sophisticated data base
+ * or similar to find the requested items but rather on a in memory structure that keeps them all.
+ *
+ * @author Christian Lutz
+ * 2018
+ */
 public class InMemoryBookRepository implements BookRepository {
 	
 	private Books books;
 	
-	public InMemoryBookRepository(InputStream in) {
+	/**
+	 * Creates a new {@link InMemoryBookRepository}, that loads the books from the given {@link InputStream}.
+	 *
+	 * @param in that provides us with the necessary data.
+	 * @throws InMemoryBookRepositoryInitializationException if there is something wrong with the given inputStream and
+	 * we therefore cannot access the books with which this repository should be backed up.
+	 */
+	public InMemoryBookRepository(InputStream in) throws InMemoryBookRepositoryInitializationException {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			this.books = mapper.readValue(in, Books.class);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (IOException ex) {
+			throw new InMemoryBookRepositoryInitializationException(ex);
 		}
 	}
 
@@ -38,6 +54,17 @@ public class InMemoryBookRepository implements BookRepository {
 				if (identifier.getIdentifier().equals(isbn)) {
 					return item;
 				}
+			}
+		}
+		
+		return null;
+	}
+	
+	@Override
+	public Item getItemById(String id) {
+		for (Item item : books.getItems()) {
+			if (item.getId().equals(id)) {
+				return item;
 			}
 		}
 		
@@ -88,6 +115,29 @@ public class InMemoryBookRepository implements BookRepository {
 		});
 		
 		return ratings;
+	}
+	
+	@Override
+	public Collection<String> getCategories() {
+		Set<String> categories = new HashSet<>();
+		for (Item item : books.getItems()) {
+			VolumeInfo volumeInfo = item.getVolumeInfo();
+			if (volumeInfo == null) {
+				continue;
+			}
+			List<String> cat = volumeInfo.getCategories();
+			if (cat == null) {
+				continue;
+			}
+			for (String category : cat) {
+				if (category != null) {
+					categories.add(category);
+				}
+			}
+		}
+		
+		
+		return new ArrayList<>(categories);
 	}
 	
 	private class RatingCalculator {
