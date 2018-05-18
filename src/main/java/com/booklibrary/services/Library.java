@@ -11,15 +11,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.booklibrary.entities.Item;
 import com.booklibrary.repository.BookRepository;
 import com.booklibrary.repository.InMemoryBookRepositoryInitializationException;
 import com.booklibrary.repository.RepositoryProvider;
 
-//@Component
 @Path("/api/")
 public class Library {
 	

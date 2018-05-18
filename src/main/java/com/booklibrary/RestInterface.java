@@ -12,16 +12,13 @@ import org.springframework.context.ApplicationContext;
 
 import com.booklibrary.services.Library;
 
-//@Component
 public class RestInterface {
 
 	private static final String BASE_URI = "http://localhost:7777/";
-	private static final String BASE_PACKAGE = "com.booklibrary.services";
 	private HttpServer server;
 	
 	public RestInterface(Library library) {
 		final ResourceConfig rc = new ResourceConfig().register(library);
-//				packages(BASE_PACKAGE);
 		server = GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
 		System.out.println("REST-Server is running at " + BASE_URI);
 	}

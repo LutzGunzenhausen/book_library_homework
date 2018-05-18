@@ -4,7 +4,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class Starter {
 	
-	public static void main(String[] args) {
+	public static void maisssn(String[] args) {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LibraryConfiguration.class);
 		
 		context.start();

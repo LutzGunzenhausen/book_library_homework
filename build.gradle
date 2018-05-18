@@ -96,9 +96,5 @@ dependencies {
     
 }
 
-// context where tomcat is deployed, by defautl localhost:8080/
-//tomcatRun.contextPath = '/'
-//tomcatRunWar.contextPath = '/'
-
 task('StartApplication', dependsOn: ['war', 'tomcatRun']) {
 }
