@@ -3,7 +3,7 @@ package com.booklibrary;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.booklibrary.repository.FixedLocationRepositoryProvider;
+import com.booklibrary.repository.ConfigurationRepositoryProvider;
 import com.booklibrary.repository.InMemoryBookRepositoryInitializationException;
 import com.booklibrary.repository.RepositoryProvider;
 import com.booklibrary.services.Library;
@@ -13,7 +13,7 @@ public class LibraryConfiguration {
 	
 	@Bean
 	public RepositoryProvider repositoryProvider() {
-		return new FixedLocationRepositoryProvider();
+		return new ConfigurationRepositoryProvider();
 	}
 	
 	@Bean

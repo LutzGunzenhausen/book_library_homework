@@ -53,6 +53,11 @@ public interface BookRepository {
 	@Nonnull
 	List<AuthorRating> getRatings();
 	
+	/**
+	 * Returns all the categories, that currently are configured in the system.
+	 *
+	 * @return all categories.
+	 */
 	@Nonnull
 	Collection<String> getCategories();
 
